@@ -5,8 +5,8 @@
     <description>rust-analyzer: building a better Rust IDE</description>
     <link>https://rust-analyzer.github.io//</link>
     <atom:link href="https://rust-analyzer.github.io//feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 29 Jun 2020 14:20:40 +0000</pubDate>
-    <lastBuildDate>Mon, 29 Jun 2020 14:20:40 +0000</lastBuildDate>
+    <pubDate>Mon, 29 Jun 2020 15:17:15 +0000</pubDate>
+    <lastBuildDate>Mon, 29 Jun 2020 15:17:15 +0000</lastBuildDate>
     <generator>Jekyll v3.8.7</generator>
     
       <item>
@@ -45,7 +45,7 @@ This reduces the latency of &quot;go to definition&quot; in a simple benchmark o
 &lt;li&gt;
 &lt;p&gt;&lt;a href=&quot;https://github.com/rust-analyzer/rust-analyzer/pull/5017&quot;&gt;&lt;code&gt;#5017&lt;/code&gt;&lt;/a&gt; add custom cargo runners support. This adds an option to delegate actual cargo commands building to another extension.
 For example, to use a different manager like &lt;a href=&quot;https://github.com/rust-embedded/cross&quot;&gt;cross&lt;/a&gt;.
-&lt;a href=&quot;https://github.com/vsrs/cross-rust-analyzer&quot;&gt;cross-rust-analyzer&lt;/a&gt; is an example of such extension.&lt;/p&gt;
+&lt;a href=&quot;https://marketplace.visualstudio.com/items?itemName=vsrs.cross-rust-analyzer&quot;&gt;cross-rust-analyzer&lt;/a&gt; is an example of such extension.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;a href=&quot;https://github.com/rust-analyzer/rust-analyzer/pull/5069&quot;&gt;&lt;code&gt;#5069&lt;/code&gt;&lt;/a&gt; &lt;strong&gt;Extract Variable&lt;/strong&gt; understands field init shorthand&lt;/p&gt;
