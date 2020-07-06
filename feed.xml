@@ -5,8 +5,8 @@
     <description>rust-analyzer: building a better Rust IDE</description>
     <link>https://rust-analyzer.github.io//</link>
     <atom:link href="https://rust-analyzer.github.io//feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 06 Jul 2020 15:00:43 +0000</pubDate>
-    <lastBuildDate>Mon, 06 Jul 2020 15:00:43 +0000</lastBuildDate>
+    <pubDate>Mon, 06 Jul 2020 15:11:08 +0000</pubDate>
+    <lastBuildDate>Mon, 06 Jul 2020 15:11:08 +0000</lastBuildDate>
     <generator>Jekyll v3.8.7</generator>
     
       <item>
@@ -83,7 +83,7 @@ Release: &lt;a href=&quot;https://github.com/rust-analyzer/rust-analyzer/release
 &lt;p&gt;&lt;a href=&quot;https://github.com/rust-analyzer/rust-analyzer/pull/5192&quot;&gt;&lt;code&gt;#5192&lt;/code&gt;&lt;/a&gt; take &lt;code&gt;rust-analyzer.cargo.features&lt;/code&gt; into account when generating run configurations.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;&lt;a href=&quot;https://github.com/rust-analyzer/rust-analyzer/pull/5202&quot;&gt;&lt;code&gt;#5202&lt;/code&gt;&lt;/a&gt; allow to set default environment for run configurations:&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/rust-analyzer/rust-analyzer/pull/5202&quot;&gt;&lt;code&gt;#5202&lt;/code&gt;&lt;/a&gt; allow to set default environment for run configurations (&lt;a href=&quot;https://rust-analyzer.github.io/manual.html#setting-runnable-environment-variables&quot;&gt;docs&lt;/a&gt;):&lt;/p&gt;
 &lt;div class=&quot;listingblock&quot;&gt;
 &lt;div class=&quot;content&quot;&gt;
 &lt;pre class=&quot;rouge highlight&quot;&gt;&lt;code data-lang=&quot;jsonc&quot;&gt;&lt;table class=&quot;linenotable&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;linenos gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt; 1
