@@ -5,8 +5,8 @@
     <description>rust-analyzer: building a better Rust IDE</description>
     <link>https://rust-analyzer.github.io//</link>
     <atom:link href="https://rust-analyzer.github.io//feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 13 Jul 2020 11:11:28 +0000</pubDate>
-    <lastBuildDate>Mon, 13 Jul 2020 11:11:28 +0000</lastBuildDate>
+    <pubDate>Mon, 13 Jul 2020 14:35:00 +0000</pubDate>
+    <lastBuildDate>Mon, 13 Jul 2020 14:35:00 +0000</lastBuildDate>
     <generator>Jekyll v3.8.7</generator>
     
       <item>
@@ -116,7 +116,7 @@ rust-analyzer 8b0983e
 &lt;p&gt;&lt;a href=&quot;https://github.com/rust-analyzer/rust-analyzer/pull/5319&quot;&gt;&lt;code&gt;#5319&lt;/code&gt;&lt;/a&gt; upgrade Chalk, fixing a number of type inference bugs.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;&lt;a href=&quot;https://github.com/rust-analyzer/rust-analyzer/pull/5285&quot;&gt;&lt;code&gt;#5285&lt;/code&gt;&lt;/a&gt; correctly determine cursor position when rewrting to a raw strings:&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/rust-analyzer/rust-analyzer/pull/5285&quot;&gt;&lt;code&gt;#5285&lt;/code&gt;&lt;/a&gt; correctly determine cursor position when rewriting to a raw strings:&lt;/p&gt;
 &lt;div class=&quot;imageblock&quot;&gt;
 &lt;div class=&quot;content&quot;&gt;
 &lt;img src=&quot;https://user-images.githubusercontent.com/1711539/87071611-bdf35300-c21a-11ea-93d6-c04f1b1a8ac1.gif&quot; alt=&quot;87071611 bdf35300 c21a 11ea 93d6 c04f1b1a8ac1&quot;&gt;
