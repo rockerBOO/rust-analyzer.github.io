@@ -56,9 +56,20 @@ This manual focuses on a specific usage of the library&#8201;&#8212;&#8201;runni
 <a href="https://microsoft.github.io/language-server-protocol/">Language Server Protocol</a> (LSP).
 The LSP allows various code editors, like VS Code, Emacs or Vim, to implement semantic features like completion or goto definition by talking to an external language server process.</p>
 </div>
-<div class="paragraph">
-<p>To improve this document, send a pull request against
-<a href="https://github.com/rust-analyzer/rust-analyzer/blob/master/docs/user/manual.adoc">this file</a>.</p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph lead">
+<p>To improve this document, send a pull request:<br>
+<a href="https://github.com/rust-analyzer/rust-analyzer/blob/master/docs/user/manual.adoc">https://github.com/rust-analyzer/&#8230;&#8203;/manual.adoc</a></p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>If you have questions about using rust-analyzer, please ask them in the <a href="https://users.rust-lang.org/c/ide/14">&#8220;IDEs and Editors&#8221;</a> topic of Rust users forum.</p>
@@ -92,6 +103,7 @@ The LSP allows various code editors, like VS Code, Emacs or Vim, to implement se
 <li><a href="#magic-completions">Magic Completions</a></li>
 <li><a href="#matching-brace">Matching Brace</a></li>
 <li><a href="#memory-usage">Memory Usage</a></li>
+<li><a href="#on-enter">On Enter</a></li>
 <li><a href="#on-typing-assists">On Typing Assists</a></li>
 <li><a href="#parent-module">Parent Module</a></li>
 <li><a href="#run">Run</a></li>
@@ -733,7 +745,7 @@ Specifically, the <code>roots</code> setup will be different eventually.</p>
 <div class="sect2">
 <h3 id="file-structure"><a class="anchor" href="#file-structure"></a>File Structure</h3>
 <div class="paragraph">
-<p><strong>Source:</strong> <a href="https://github.com/rust-analyzer/rust-analyzer/blob/master/crates/ra_ide/src/display/structure.rs#L17">structure.rs</a></p>
+<p><strong>Source:</strong> <a href="https://github.com/rust-analyzer/rust-analyzer/blob/master/crates/ra_ide/src/file_structure.rs#L17">file_structure.rs</a></p>
 </div>
 <div class="paragraph">
 <p>Provides a tree of the symbols defined in the file. Can be used to</p>
@@ -864,7 +876,7 @@ Focusing is usually hovering with a mouse, but can also be triggered with a shor
 <div class="sect2">
 <h3 id="inlay-hints"><a class="anchor" href="#inlay-hints"></a>Inlay Hints</h3>
 <div class="paragraph">
-<p><strong>Source:</strong> <a href="https://github.com/rust-analyzer/rust-analyzer/blob/master/crates/ra_ide/src/inlay_hints.rs#L40">inlay_hints.rs</a></p>
+<p><strong>Source:</strong> <a href="https://github.com/rust-analyzer/rust-analyzer/blob/master/crates/ra_ide/src/inlay_hints.rs#L42">inlay_hints.rs</a></p>
 </div>
 <div class="paragraph">
 <p>rust-analyzer shows additional information inline with the source code.
@@ -992,7 +1004,7 @@ takes arguments, the cursor is positioned inside the parenthesis.</p>
 <div class="title">Expressions</div>
 <ul>
 <li>
-<p><code>pd</code> &#8594; <code>eprintln!(" = {:?}", );")</code></p>
+<p><code>pd</code> &#8594; <code>eprintln!(" = {:?}", );</code></p>
 </li>
 <li>
 <p><code>ppd</code> &#8594; <code>eprintln!(" = {:#?}", );</code></p>
@@ -1087,6 +1099,51 @@ braces, so it won&#8217;t confuse generics with comparisons.</p>
 </table>
 </div>
 <div class="sect2">
+<h3 id="on-enter"><a class="anchor" href="#on-enter"></a>On Enter</h3>
+<div class="paragraph">
+<p><strong>Source:</strong> <a href="https://github.com/rust-analyzer/rust-analyzer/blob/master/crates/ra_ide/src/typing/on_enter.rs#L15">on_enter.rs</a></p>
+</div>
+<div class="paragraph">
+<p>rust-analyzer can override <kbd>Enter</kbd> key to make it smarter:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><kbd>Enter</kbd> inside triple-slash comments automatically inserts <code>///</code></p>
+</li>
+<li>
+<p><kbd>Enter</kbd> in the middle or after a trailing space in <code>//</code> inserts <code>//</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This action needs to be assigned to shortcut explicitly.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">VS Code</dt>
+<dd>
+<p>Add the following to <code>keybindings.json</code>:</p>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="json"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="code"><pre><span class="p">{</span><span class="w">
+  </span><span class="nl">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Enter"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rust-analyzer.onEnter"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"when"</span><span class="p">:</span><span class="w"> </span><span class="s2">"editorTextFocus &amp;&amp; !suggestWidgetVisible &amp;&amp; editorLangId == rust"</span><span class="w">
+</span><span class="p">}</span>
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
 <h3 id="on-typing-assists"><a class="anchor" href="#on-typing-assists"></a>On Typing Assists</h3>
 <div class="paragraph">
 <p><strong>Source:</strong> <a href="https://github.com/rust-analyzer/rust-analyzer/blob/master/crates/ra_ide/src/typing.rs#L37">typing.rs</a></p>
@@ -1098,9 +1155,6 @@ braces, so it won&#8217;t confuse generics with comparisons.</p>
 <ul>
 <li>
 <p>typing <code>let =</code> tries to smartly add <code>;</code> if <code>=</code> is followed by an existing expression</p>
-</li>
-<li>
-<p>Enter inside comments automatically inserts <code>///</code></p>
 </li>
 <li>
 <p>typing <code>.</code> in a chain method call auto-indents</p>
@@ -2345,7 +2399,7 @@ on <code>if</code>.</p>
 </div>
 <h3 id="make_raw_string" class="discrete"><code>make_raw_string</code></h3>
 <div class="paragraph">
-<p><strong>Source:</strong> <a href="https://github.com/rust-analyzer/rust-analyzer/blob/master/crates/ra_assists/src/handlers/raw_string.rs#L12">raw_string.rs</a></p>
+<p><strong>Source:</strong> <a href="https://github.com/rust-analyzer/rust-analyzer/blob/master/crates/ra_assists/src/handlers/raw_string.rs#L13">raw_string.rs</a></p>
 </div>
 <div class="paragraph">
 <p>Adds <code>r#</code> to a plain string literal.</p>
@@ -3049,6 +3103,39 @@ The simplest way for all runnables in a bunch:</p>
 </div>
 <div class="paragraph">
 <p>You can use any valid RegExp as a mask. Also note that a full runnable name is something like <strong>run bin_or_example_name</strong>, <strong>test some::mod::test_name</strong> or <strong>test-mod some::mod</strong>, so it is possible to distinguish binaries, single tests, and test modules with this masks: <code>"^run"</code>, <code>"^test "</code> (the trailing space matters!), and <code>"^test-mod"</code> respectively.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="compiler-feedback-from-external-commands"><a class="anchor" href="#compiler-feedback-from-external-commands"></a>Compiler feedback from external commands</h4>
+<div class="paragraph">
+<p>Instead of relying on the built-in <code>cargo check</code>, you can configure Code to run a command in the background and use the <code>$rustc-watch</code> problem matcher to generate inline error markers from its output.</p>
+</div>
+<div class="paragraph">
+<p>To do this you need to create a new <a href="https://code.visualstudio.com/docs/editor/tasks">VS Code Task</a> and set <code>rust-analyzer.checkOnSave.enable: false</code> in preferences.</p>
+</div>
+<div class="paragraph">
+<p>For example, if you want to run <a href="https://crates.io/crates/cargo-watch"><code>cargo watch</code></a> instead, you might add the following to <code>.vscode/tasks.json</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="json"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="code"><pre><span class="p">{</span><span class="w">
+    </span><span class="nl">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Watch"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"group"</span><span class="p">:</span><span class="w"> </span><span class="s2">"build"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"shell"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cargo watch"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"problemMatcher"</span><span class="p">:</span><span class="w"> </span><span class="s2">"$rustc-watch"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"isBackground"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="p">}</span>
+</pre></td></tr></tbody></table></code></pre>
+</div>
 </div>
 </div>
 </div>
