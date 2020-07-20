@@ -5,8 +5,8 @@
     <description>rust-analyzer: building a better Rust IDE</description>
     <link>https://rust-analyzer.github.io//</link>
     <atom:link href="https://rust-analyzer.github.io//feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 20 Jul 2020 11:16:21 +0000</pubDate>
-    <lastBuildDate>Mon, 20 Jul 2020 11:16:21 +0000</lastBuildDate>
+    <pubDate>Mon, 20 Jul 2020 15:25:24 +0000</pubDate>
+    <lastBuildDate>Mon, 20 Jul 2020 15:25:24 +0000</lastBuildDate>
     <generator>Jekyll v3.8.7</generator>
     
       <item>
@@ -140,7 +140,7 @@ Call for participation: pure Rust version of mimalloc would be really handy as c
 &lt;p&gt;&lt;a href=&quot;https://github.com/rust-analyzer/rust-analyzer/pull/5387&quot;&gt;&lt;code&gt;#5387&lt;/code&gt;&lt;/a&gt; add &lt;code&gt;--memory-usage&lt;/code&gt; to analysis-bench.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;&lt;a href=&quot;https://github.com/rust-analyzer/rust-analyzer/pull/5405&quot;&gt;&lt;code&gt;#5405&lt;/code&gt;&lt;/a&gt;, &lt;a href=&quot;https://github.com/rust-analyzer/rust-analyzer/pull/5415&quot;&gt;&lt;code&gt;#5415&lt;/code&gt;&lt;/a&gt;, &lt;a href=&quot;https://github.com/rust-analyzer/rust-analyzer/pull/5417&quot;&gt;&lt;code&gt;#5417&lt;/code&gt;&lt;/a&gt; refactor support fo callables, so that IDE features that work for functions, work for lambdas as well.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/rust-analyzer/rust-analyzer/pull/5405&quot;&gt;&lt;code&gt;#5405&lt;/code&gt;&lt;/a&gt;, &lt;a href=&quot;https://github.com/rust-analyzer/rust-analyzer/pull/5415&quot;&gt;&lt;code&gt;#5415&lt;/code&gt;&lt;/a&gt;, &lt;a href=&quot;https://github.com/rust-analyzer/rust-analyzer/pull/5417&quot;&gt;&lt;code&gt;#5417&lt;/code&gt;&lt;/a&gt; refactor support for callables, so that IDE features that work for functions, work for lambdas as well.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;a href=&quot;https://github.com/rust-analyzer/rust-analyzer/pull/5413&quot;&gt;&lt;code&gt;#5413&lt;/code&gt;&lt;/a&gt; rewrite call info to use semantic information.&lt;/p&gt;
