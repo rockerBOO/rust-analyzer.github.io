@@ -5,8 +5,8 @@
     <description>rust-analyzer: building a better Rust IDE</description>
     <link>https://rust-analyzer.github.io//</link>
     <atom:link href="https://rust-analyzer.github.io//feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 20 Jul 2020 15:25:24 +0000</pubDate>
-    <lastBuildDate>Mon, 20 Jul 2020 15:25:24 +0000</lastBuildDate>
+    <pubDate>Mon, 20 Jul 2020 21:35:36 +0000</pubDate>
+    <lastBuildDate>Mon, 20 Jul 2020 21:35:36 +0000</lastBuildDate>
     <generator>Jekyll v3.8.7</generator>
     
       <item>
@@ -26,7 +26,7 @@ Release: &lt;a href=&quot;https://github.com/rust-analyzer/rust-analyzer/release
 &lt;h2 id=&quot;sponsors&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#sponsors&quot;&gt;&lt;/a&gt;Sponsors&lt;/h2&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;&lt;strong&gt;Become a sponsor:&lt;/strong&gt; &lt;a href=&quot;https://opencollective.com/rust-analyzer/&quot;&gt;opecollective.com/rust-analyzer&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Become a sponsor:&lt;/strong&gt; &lt;a href=&quot;https://opencollective.com/rust-analyzer/&quot;&gt;opencollective.com/rust-analyzer&lt;/a&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -193,12 +193,12 @@ There&amp;#8217;s &lt;strong&gt;much&lt;/strong&gt; more to implementing a full-
 &lt;h2 id=&quot;map-reduce&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#map-reduce&quot;&gt;&lt;/a&gt;Map Reduce&lt;/h2&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The first architecture is reminiscent of map-reduce paradigm.
+&lt;p&gt;The first architecture is reminiscent of the map-reduce paradigm.
 The idea is to split analysis into relatively simple indexing phase, and a separate full analysis phase.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;The core constraint of indexing is that it runs on a per-file basis.
-The indexer takes a text of a single file, parses it, and spits out some data about the file.
+The indexer takes the text of a single file, parses it, and spits out some data about the file.
 The indexer can&amp;#8217;t touch other files.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
@@ -208,13 +208,13 @@ The indexer can&amp;#8217;t touch other files.&lt;/p&gt;
 &lt;p&gt;This all sounds way too abstract, so let&amp;#8217;s look at a specific example&amp;#8201;&amp;#8212;&amp;#8201;Java.
 In Java, each file starts with a package declaration.
 The indexer concatenates the name of the package with a class name to get a fully-qualified name (FQN).
-It also collects the set of method declared in the class, the list of superclasses and interfaces, etc.&lt;/p&gt;
+It also collects the set of methods declared in the class, the list of superclasses and interfaces, etc.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Per-file data is merged into an index which maps FQNs to classes.
 Note that constructing this mapping is an embarrassingly parallel task&amp;#8201;&amp;#8212;&amp;#8201;all files are parsed independently.
 Moreover, this map is cheap to update.
-When a file change arrives, this file&amp;#8217;s contribution from the index is removed, the text of file is changed and the indexer runs on the new text and adds new contributions.
+When a file change arrives, this file&amp;#8217;s contribution from the index is removed, the text of the file is changed and the indexer runs on the new text and adds the new contributions.
 The amount of work to do is proportional to the number of changed files, and is independent from the total number of files.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
@@ -281,32 +281,32 @@ The amount of work to do is proportional to the number of changed files, and is 
 &lt;p&gt;The user has just typed &lt;code&gt;Foo.f().&lt;/code&gt;, and we need to figure out that the type of receiver expression is &lt;code&gt;Bar&lt;/code&gt;, and suggest &lt;code&gt;g&lt;/code&gt; as a completion.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;First, as the &lt;code&gt;Main.java&lt;/code&gt; file is modified, we run the indexer on this single file.
-Nothing has changed (the file still contains &lt;code&gt;Main&lt;/code&gt; class with static &lt;code&gt;main&lt;/code&gt; method), so we don&amp;#8217;t need to update FQN index.&lt;/p&gt;
+&lt;p&gt;First, as the file &lt;code&gt;Main.java&lt;/code&gt; is modified, we run the indexer on this single file.
+Nothing has changed (the file still contains the class &lt;code&gt;Main&lt;/code&gt; with a static &lt;code&gt;main&lt;/code&gt; method), so we don&amp;#8217;t need to update the FQN index.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Next, we need to resolve &lt;code&gt;Foo&lt;/code&gt; name.
-We parse the file, notice an &lt;code&gt;import&lt;/code&gt; and lookup &lt;code&gt;mypackage.Foo&lt;/code&gt; in the FQN index.
+&lt;p&gt;Next, we need to resolve the name &lt;code&gt;Foo&lt;/code&gt;.
+We parse the file, notice an &lt;code&gt;import&lt;/code&gt; and look up &lt;code&gt;mypackage.Foo&lt;/code&gt; in the FQN index.
 In the index, we also find that &lt;code&gt;Foo&lt;/code&gt; has a static method &lt;code&gt;f&lt;/code&gt;, so we resolve the call as well.
 The index also stores the return type of &lt;code&gt;f&lt;/code&gt;, but, and this is crucial, it stores it as a string &lt;code&gt;&quot;Bar&quot;&lt;/code&gt;, and not as a direct reference to the class &lt;code&gt;Bar&lt;/code&gt;.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;The reason for that is &lt;code&gt;import java.util.*&lt;/code&gt; in &lt;code&gt;Foo.java&lt;/code&gt;.
 &lt;code&gt;Bar&lt;/code&gt; can refer either to &lt;code&gt;java.util.Bar&lt;/code&gt; or to &lt;code&gt;mypackage.Bar&lt;/code&gt;.
-The indexer doesn&amp;#8217;t know which one, because it can look &lt;strong&gt;only&lt;/strong&gt; at the text of the &lt;code&gt;Foo.java&lt;/code&gt;.
+The indexer doesn&amp;#8217;t know which one, because it can look &lt;strong&gt;only&lt;/strong&gt; at the text of &lt;code&gt;Foo.java&lt;/code&gt;.
 In other words, while the index does store the return types of methods, it stores them in an unresolved form.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The next step is to resolve &lt;code&gt;Bar&lt;/code&gt; identifier in the context of &lt;code&gt;Foo.java&lt;/code&gt; file.
-This uses FQN index, and lands into the &lt;code&gt;mypackage.Bar&lt;/code&gt; class.
-There the desired &lt;code&gt;g&lt;/code&gt; method is found.&lt;/p&gt;
+&lt;p&gt;The next step is to resolve the identifier &lt;code&gt;Bar&lt;/code&gt; in the context of &lt;code&gt;Foo.java&lt;/code&gt;.
+This uses the FQN index, and lands in the class &lt;code&gt;mypackage.Bar&lt;/code&gt;.
+There the desired method &lt;code&gt;g&lt;/code&gt; is found.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;All together, only three files were touched during completion.
-FQN index allowed to completely ignore all the other files in the project.&lt;/p&gt;
+&lt;p&gt;Altogether, only three files were touched during completion.
+The FQN index allowed us to completely ignore all the other files in the project.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;One problem with the approach described thus far is that resolving types from the index requires non-trivial amount of work.
+&lt;p&gt;One problem with the approach described thus far is that resolving types from the index requires a non-trivial amount of work.
 This work might be duplicated if, for example, &lt;code&gt;Foo.f&lt;/code&gt; is called several times.
 The fix is to add a cache.
 Name resolution results are memoized, so that the cost is paid only once.
@@ -327,7 +327,7 @@ The cache is blown away completely on any change&amp;#8201;&amp;#8212;&amp;#8201
 &lt;p&gt;Name resolution and type inference work primarily off the stubs.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;Name resolution is lazy (we only resolved type from the stub when we need it) and memoized (each type is resolved only once).&lt;/p&gt;
+&lt;p&gt;Name resolution is lazy (we only resolve a type from the stub when we need it) and memoized (each type is resolved only once).&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;The caches are completely invalidated on every change&lt;/p&gt;
@@ -337,7 +337,7 @@ The cache is blown away completely on any change&amp;#8201;&amp;#8212;&amp;#8201
 &lt;div class=&quot;ulist&quot;&gt;
 &lt;ul&gt;
 &lt;li&gt;
-&lt;p&gt;if the edit doesn&amp;#8217;t change file&amp;#8217;s stub, no change to the index is required.&lt;/p&gt;
+&lt;p&gt;if the edit doesn&amp;#8217;t change the file&amp;#8217;s stub, no change to the index is required.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;otherwise, old keys are removed and new keys are added&lt;/p&gt;
@@ -348,21 +348,21 @@ The cache is blown away completely on any change&amp;#8201;&amp;#8212;&amp;#8201
 &lt;/ol&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Note an interesting interplay between &quot;dumb&quot; indexes which can be incrementally updated, and &quot;smart&quot; caches, which are re-computed from scratch.&lt;/p&gt;
+&lt;p&gt;Note an interesting interplay between &quot;dumb&quot; indexes which can be updated incrementally, and &quot;smart&quot; caches, which are re-computed from scratch.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;This approach combines simplicity and stellar performance.
 The bulk of work is the indexing phase, and you can parallelize and even distribute it across several machine.
-The two example of this architecture are &lt;a href=&quot;https://www.jetbrains.com/idea/&quot;&gt;IntelliJ&lt;/a&gt; and &lt;a href=&quot;https://sorbet.org/&quot;&gt;Sorbet&lt;/a&gt;.&lt;/p&gt;
+Two examples of this architecture are &lt;a href=&quot;https://www.jetbrains.com/idea/&quot;&gt;IntelliJ&lt;/a&gt; and &lt;a href=&quot;https://sorbet.org/&quot;&gt;Sorbet&lt;/a&gt;.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;The main drawback of this approach is that it works only when it works&amp;#8201;&amp;#8212;&amp;#8201;not every language has a well-defined FQN concept.
-I think overall it&amp;#8217;s a good idea to design name resolution and module system (mostly boring parts of the language) such that they work well with map-reduce paradigm.&lt;/p&gt;
+I think overall it&amp;#8217;s a good idea to design name resolution and module systems (mostly boring parts of a language) such that they work well with the map-reduce paradigm.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;ulist&quot;&gt;
 &lt;ul&gt;
 &lt;li&gt;
-&lt;p&gt;Require &lt;code&gt;package&lt;/code&gt; declarations or infer them from a file-system layout&lt;/p&gt;
+&lt;p&gt;Require &lt;code&gt;package&lt;/code&gt; declarations or infer them from the file-system layout&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;Forbid meta-programming facilities which add new top-level declarations, or restrict them in such way that they can be used by the indexer.
@@ -374,7 +374,7 @@ For example, if the language supports conditional compilation, make sure that it
 Otherwise, you&amp;#8217;d have to index the same file with different conditional compilation settings, and that is messy.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;Make sure that FQN are enough for most of the name resolution.&lt;/p&gt;
+&lt;p&gt;Make sure that FQNs are enough for most of the name resolution.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;
@@ -438,7 +438,7 @@ It requires:&lt;/p&gt;
 &lt;div class=&quot;ulist&quot;&gt;
 &lt;ul&gt;
 &lt;li&gt;
-&lt;p&gt;&quot;declaration before use&quot; rule,&lt;/p&gt;
+&lt;p&gt;a &quot;declaration before use&quot; rule,&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;headers or equivalent interface files.&lt;/p&gt;
@@ -449,7 +449,7 @@ It requires:&lt;/p&gt;
 &lt;p&gt;Two such languages are C&amp;#43;&amp;#43; and OCaml.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The idea of the approach is simple&amp;#8201;&amp;#8212;&amp;#8201;just use traditional compiler, by snapshotting its state immediately after imports for each compilation unit.
+&lt;p&gt;The idea of the approach is simple&amp;#8201;&amp;#8212;&amp;#8201;just use a traditional compiler and snapshot its state immediately after imports for each compilation unit.
 An example:&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;listingblock&quot;&gt;
@@ -468,12 +468,12 @@ An example:&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Here, the compiler fully processes &lt;code&gt;iostream&lt;/code&gt; (and any further headers it includes), snapshots its state and proceeds with parsing the program itself.
+&lt;p&gt;Here, the compiler fully processes &lt;code&gt;iostream&lt;/code&gt; (and any further headers included), snapshots its state and proceeds with parsing the program itself.
 When the user types more characters, the compiler restarts from the point just after the include.
 As the size of each compilation unit itself is usually reasonable, the analysis is fast.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;If the user types something into the header file than the caches need to be invalidated.
+&lt;p&gt;If the user types something into the header file, then the caches need to be invalidated.
 However, changes to headers are comparatively rare, most of the code lives in &lt;code&gt;.cpp&lt;/code&gt; files.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
@@ -495,7 +495,7 @@ Stubs store unresolved types, but includes can be snapshotted after complete ana
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;The huge benefit of this approach is that it allows re-use of an existing batch compiler.
-Two other approaches described in the article typically result in compiler re-writes.
+The two other approaches described in this article typically result in compiler re-writes.
 The drawback is that almost nobody likes headers and forward declarations.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -559,8 +559,8 @@ Headers shield us from most of the implementation code.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;&lt;code&gt;bitflags&lt;/code&gt; is macro which comes from another crate and defines a top-level declaration.
-We can&amp;#8217;t put the results of macro expansion into the index, because it depends on macro definition in another file.
-We can put macro call itself into an index, but that is mostly useless, as the items, declared by the macro, would miss the index.&lt;/p&gt;
+We can&amp;#8217;t put the results of macro expansion into the index, because it depends on a macro definition in another file.
+We can put the macro call itself into an index, but that is mostly useless, as the items, declared by the macro, would miss the index.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Here&amp;#8217;s another one:&lt;/p&gt;
@@ -580,15 +580,15 @@ We can put macro call itself into an index, but that is mostly useless, as the i
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Modules &lt;code&gt;foo&lt;/code&gt; and &lt;code&gt;bar&lt;/code&gt; refer to the same file, &lt;code&gt;foo.rs&lt;/code&gt;, which effectively means that items from &lt;code&gt;foo.rs&lt;/code&gt; are duplicated.
-If &lt;code&gt;foo.rs&lt;/code&gt; contains &lt;code&gt;struct S;&lt;/code&gt; declaration, than &lt;code&gt;foo::S&lt;/code&gt; and &lt;code&gt;bar::S&lt;/code&gt; are different types.
+If &lt;code&gt;foo.rs&lt;/code&gt; contains the declaration &lt;code&gt;struct S;&lt;/code&gt;, then &lt;code&gt;foo::S&lt;/code&gt; and &lt;code&gt;bar::S&lt;/code&gt; are different types.
 You also can&amp;#8217;t fit that into an index, because those &lt;code&gt;mod&lt;/code&gt; declarations are in a different file.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;The second approach doesn&amp;#8217;t work either.
 In C&amp;#43;&amp;#43;, the compilation unit is a single file.
 In Rust, the compilation unit is a whole crate, which consists of many files and is typically much bigger.
-And Rust has procedural macros, which means that even surface analysis of code can take unbounded amount of time.
-And there are no header files, so IDE has to process the whole crate.
+And Rust has procedural macros, which means that even surface analysis of code can take an unbounded amount of time.
+And there are no header files, so the IDE has to process the whole crate.
 Additionally, intra-crate name resolution is much more complicated (declaration before use vs. fixed point iteration intertwined with macro expansion).&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
@@ -601,7 +601,7 @@ We compensate for the deficit of laziness with incrementality.
 Specifically, we use a generic framework for incremental computation&amp;#8201;&amp;#8212;&amp;#8201;&lt;a href=&quot;https://github.com/salsa-rs/salsa&quot;&gt;salsa&lt;/a&gt;.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The idea behind salsa is rather simple&amp;#8201;&amp;#8212;&amp;#8201;all function calls inside the compiler are instrumented to record which other functions were called during execution.
+&lt;p&gt;The idea behind salsa is rather simple&amp;#8201;&amp;#8212;&amp;#8201;all function calls inside the compiler are instrumented to record which other functions were called during their execution.
 The recorded traces are used to implement fine-grained incrementality.
 If after modification the results of all of the dependencies are the same, the old result is reused.&lt;/p&gt;
 &lt;/div&gt;
@@ -610,15 +610,15 @@ If after modification the results of all of the dependencies are the same, the o
 If despite a different input they are the same, the propagation of invalidation stops.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Using this engine, we were able to implement rather fancy update strategy.
-Unlike map reduce approach, our indices can store resolved types, which are invalidated only when top-level change occurs.
+&lt;p&gt;Using this engine, we were able to implement a rather fancy update strategy.
+Unlike the map reduce approach, our indices can store resolved types, which are invalidated only when a top-level change occurs.
 Even after a top-level change, we are able to re-use results of most macro expansions.
-And typing inside top-level macro also doesn&amp;#8217;t invalidate caches unless the expansion of the macro introduces a different set of items.&lt;/p&gt;
+And typing inside of a top-level macro also doesn&amp;#8217;t invalidate caches unless the expansion of the macro introduces a different set of items.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;The main benefit of this approach is generality and correctness.
 If you have an incremental computation engine at your disposal, it becomes relatively easy to experiment with the way you structure the computation.
-The code looks mostly like a boring imperative compiler, and you are immune from cache invalidation bugs (we had one, due to procedural macro being non-deterministic).&lt;/p&gt;
+The code looks mostly like a boring imperative compiler, and you are immune to cache invalidation bugs (we had one, due to procedural macros being non-deterministic).&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;The main drawback is extra complexity, slower performance (fine-grained tracking of dependencies takes time and memory) and a feeling that this is a somewhat uncharted territory yet :-)&lt;/p&gt;
@@ -679,7 +679,7 @@ This week, Ferrous Systems is running &lt;a href=&quot;https://oxidizeconf.com/&
 Thanks to Ferrous Systems for supporting open source projects like rust-analyzer!&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;&lt;strong&gt;Become a sponsor:&lt;/strong&gt; &lt;a href=&quot;https://opencollective.com/rust-analyzer/&quot;&gt;opecollective.com/rust-analyzer&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Become a sponsor:&lt;/strong&gt; &lt;a href=&quot;https://opencollective.com/rust-analyzer/&quot;&gt;opencollective.com/rust-analyzer&lt;/a&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -858,7 +858,7 @@ Release: &lt;a href=&quot;https://github.com/rust-analyzer/rust-analyzer/release
 &lt;p&gt;@anp maintains &lt;a href=&quot;https://moxie.rs&quot;&gt;moxie&lt;/a&gt; project: a lightweight platform-agnostic declarative UI runtime, because incremental feedback latency and quality are core to building interactive software.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;&lt;strong&gt;Become a sponsor:&lt;/strong&gt; &lt;a href=&quot;https://opencollective.com/rust-analyzer/&quot;&gt;opecollective.com/rust-analyzer&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Become a sponsor:&lt;/strong&gt; &lt;a href=&quot;https://opencollective.com/rust-analyzer/&quot;&gt;opencollective.com/rust-analyzer&lt;/a&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;

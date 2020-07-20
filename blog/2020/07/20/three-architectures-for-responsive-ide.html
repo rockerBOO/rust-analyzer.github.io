@@ -79,12 +79,12 @@ There&#8217;s <strong>much</strong> more to implementing a full-blown IDE.</p>
 <h2 id="map-reduce"><a class="anchor" href="#map-reduce"></a>Map Reduce</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The first architecture is reminiscent of map-reduce paradigm.
+<p>The first architecture is reminiscent of the map-reduce paradigm.
 The idea is to split analysis into relatively simple indexing phase, and a separate full analysis phase.</p>
 </div>
 <div class="paragraph">
 <p>The core constraint of indexing is that it runs on a per-file basis.
-The indexer takes a text of a single file, parses it, and spits out some data about the file.
+The indexer takes the text of a single file, parses it, and spits out some data about the file.
 The indexer can&#8217;t touch other files.</p>
 </div>
 <div class="paragraph">
@@ -94,13 +94,13 @@ The indexer can&#8217;t touch other files.</p>
 <p>This all sounds way too abstract, so let&#8217;s look at a specific example&#8201;&#8212;&#8201;Java.
 In Java, each file starts with a package declaration.
 The indexer concatenates the name of the package with a class name to get a fully-qualified name (FQN).
-It also collects the set of method declared in the class, the list of superclasses and interfaces, etc.</p>
+It also collects the set of methods declared in the class, the list of superclasses and interfaces, etc.</p>
 </div>
 <div class="paragraph">
 <p>Per-file data is merged into an index which maps FQNs to classes.
 Note that constructing this mapping is an embarrassingly parallel task&#8201;&#8212;&#8201;all files are parsed independently.
 Moreover, this map is cheap to update.
-When a file change arrives, this file&#8217;s contribution from the index is removed, the text of file is changed and the indexer runs on the new text and adds new contributions.
+When a file change arrives, this file&#8217;s contribution from the index is removed, the text of the file is changed and the indexer runs on the new text and adds the new contributions.
 The amount of work to do is proportional to the number of changed files, and is independent from the total number of files.</p>
 </div>
 <div class="paragraph">
@@ -167,32 +167,32 @@ The amount of work to do is proportional to the number of changed files, and is 
 <p>The user has just typed <code>Foo.f().</code>, and we need to figure out that the type of receiver expression is <code>Bar</code>, and suggest <code>g</code> as a completion.</p>
 </div>
 <div class="paragraph">
-<p>First, as the <code>Main.java</code> file is modified, we run the indexer on this single file.
-Nothing has changed (the file still contains <code>Main</code> class with static <code>main</code> method), so we don&#8217;t need to update FQN index.</p>
+<p>First, as the file <code>Main.java</code> is modified, we run the indexer on this single file.
+Nothing has changed (the file still contains the class <code>Main</code> with a static <code>main</code> method), so we don&#8217;t need to update the FQN index.</p>
 </div>
 <div class="paragraph">
-<p>Next, we need to resolve <code>Foo</code> name.
-We parse the file, notice an <code>import</code> and lookup <code>mypackage.Foo</code> in the FQN index.
+<p>Next, we need to resolve the name <code>Foo</code>.
+We parse the file, notice an <code>import</code> and look up <code>mypackage.Foo</code> in the FQN index.
 In the index, we also find that <code>Foo</code> has a static method <code>f</code>, so we resolve the call as well.
 The index also stores the return type of <code>f</code>, but, and this is crucial, it stores it as a string <code>"Bar"</code>, and not as a direct reference to the class <code>Bar</code>.</p>
 </div>
 <div class="paragraph">
 <p>The reason for that is <code>import java.util.*</code> in <code>Foo.java</code>.
 <code>Bar</code> can refer either to <code>java.util.Bar</code> or to <code>mypackage.Bar</code>.
-The indexer doesn&#8217;t know which one, because it can look <strong>only</strong> at the text of the <code>Foo.java</code>.
+The indexer doesn&#8217;t know which one, because it can look <strong>only</strong> at the text of <code>Foo.java</code>.
 In other words, while the index does store the return types of methods, it stores them in an unresolved form.</p>
 </div>
 <div class="paragraph">
-<p>The next step is to resolve <code>Bar</code> identifier in the context of <code>Foo.java</code> file.
-This uses FQN index, and lands into the <code>mypackage.Bar</code> class.
-There the desired <code>g</code> method is found.</p>
+<p>The next step is to resolve the identifier <code>Bar</code> in the context of <code>Foo.java</code>.
+This uses the FQN index, and lands in the class <code>mypackage.Bar</code>.
+There the desired method <code>g</code> is found.</p>
 </div>
 <div class="paragraph">
-<p>All together, only three files were touched during completion.
-FQN index allowed to completely ignore all the other files in the project.</p>
+<p>Altogether, only three files were touched during completion.
+The FQN index allowed us to completely ignore all the other files in the project.</p>
 </div>
 <div class="paragraph">
-<p>One problem with the approach described thus far is that resolving types from the index requires non-trivial amount of work.
+<p>One problem with the approach described thus far is that resolving types from the index requires a non-trivial amount of work.
 This work might be duplicated if, for example, <code>Foo.f</code> is called several times.
 The fix is to add a cache.
 Name resolution results are memoized, so that the cost is paid only once.
@@ -213,7 +213,7 @@ The cache is blown away completely on any change&#8201;&#8212;&#8201;with an ind
 <p>Name resolution and type inference work primarily off the stubs.</p>
 </li>
 <li>
-<p>Name resolution is lazy (we only resolved type from the stub when we need it) and memoized (each type is resolved only once).</p>
+<p>Name resolution is lazy (we only resolve a type from the stub when we need it) and memoized (each type is resolved only once).</p>
 </li>
 <li>
 <p>The caches are completely invalidated on every change</p>
@@ -223,7 +223,7 @@ The cache is blown away completely on any change&#8201;&#8212;&#8201;with an ind
 <div class="ulist">
 <ul>
 <li>
-<p>if the edit doesn&#8217;t change file&#8217;s stub, no change to the index is required.</p>
+<p>if the edit doesn&#8217;t change the file&#8217;s stub, no change to the index is required.</p>
 </li>
 <li>
 <p>otherwise, old keys are removed and new keys are added</p>
@@ -234,21 +234,21 @@ The cache is blown away completely on any change&#8201;&#8212;&#8201;with an ind
 </ol>
 </div>
 <div class="paragraph">
-<p>Note an interesting interplay between "dumb" indexes which can be incrementally updated, and "smart" caches, which are re-computed from scratch.</p>
+<p>Note an interesting interplay between "dumb" indexes which can be updated incrementally, and "smart" caches, which are re-computed from scratch.</p>
 </div>
 <div class="paragraph">
 <p>This approach combines simplicity and stellar performance.
 The bulk of work is the indexing phase, and you can parallelize and even distribute it across several machine.
-The two example of this architecture are <a href="https://www.jetbrains.com/idea/">IntelliJ</a> and <a href="https://sorbet.org/">Sorbet</a>.</p>
+Two examples of this architecture are <a href="https://www.jetbrains.com/idea/">IntelliJ</a> and <a href="https://sorbet.org/">Sorbet</a>.</p>
 </div>
 <div class="paragraph">
 <p>The main drawback of this approach is that it works only when it works&#8201;&#8212;&#8201;not every language has a well-defined FQN concept.
-I think overall it&#8217;s a good idea to design name resolution and module system (mostly boring parts of the language) such that they work well with map-reduce paradigm.</p>
+I think overall it&#8217;s a good idea to design name resolution and module systems (mostly boring parts of a language) such that they work well with the map-reduce paradigm.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Require <code>package</code> declarations or infer them from a file-system layout</p>
+<p>Require <code>package</code> declarations or infer them from the file-system layout</p>
 </li>
 <li>
 <p>Forbid meta-programming facilities which add new top-level declarations, or restrict them in such way that they can be used by the indexer.
@@ -260,7 +260,7 @@ For example, if the language supports conditional compilation, make sure that it
 Otherwise, you&#8217;d have to index the same file with different conditional compilation settings, and that is messy.</p>
 </li>
 <li>
-<p>Make sure that FQN are enough for most of the name resolution.</p>
+<p>Make sure that FQNs are enough for most of the name resolution.</p>
 </li>
 </ul>
 </div>
@@ -324,7 +324,7 @@ It requires:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>"declaration before use" rule,</p>
+<p>a "declaration before use" rule,</p>
 </li>
 <li>
 <p>headers or equivalent interface files.</p>
@@ -335,7 +335,7 @@ It requires:</p>
 <p>Two such languages are C&#43;&#43; and OCaml.</p>
 </div>
 <div class="paragraph">
-<p>The idea of the approach is simple&#8201;&#8212;&#8201;just use traditional compiler, by snapshotting its state immediately after imports for each compilation unit.
+<p>The idea of the approach is simple&#8201;&#8212;&#8201;just use a traditional compiler and snapshot its state immediately after imports for each compilation unit.
 An example:</p>
 </div>
 <div class="listingblock">
@@ -354,12 +354,12 @@ An example:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Here, the compiler fully processes <code>iostream</code> (and any further headers it includes), snapshots its state and proceeds with parsing the program itself.
+<p>Here, the compiler fully processes <code>iostream</code> (and any further headers included), snapshots its state and proceeds with parsing the program itself.
 When the user types more characters, the compiler restarts from the point just after the include.
 As the size of each compilation unit itself is usually reasonable, the analysis is fast.</p>
 </div>
 <div class="paragraph">
-<p>If the user types something into the header file than the caches need to be invalidated.
+<p>If the user types something into the header file, then the caches need to be invalidated.
 However, changes to headers are comparatively rare, most of the code lives in <code>.cpp</code> files.</p>
 </div>
 <div class="paragraph">
@@ -381,7 +381,7 @@ Stubs store unresolved types, but includes can be snapshotted after complete ana
 </div>
 <div class="paragraph">
 <p>The huge benefit of this approach is that it allows re-use of an existing batch compiler.
-Two other approaches described in the article typically result in compiler re-writes.
+The two other approaches described in this article typically result in compiler re-writes.
 The drawback is that almost nobody likes headers and forward declarations.</p>
 </div>
 </div>
@@ -445,8 +445,8 @@ Headers shield us from most of the implementation code.</p>
 </div>
 <div class="paragraph">
 <p><code>bitflags</code> is macro which comes from another crate and defines a top-level declaration.
-We can&#8217;t put the results of macro expansion into the index, because it depends on macro definition in another file.
-We can put macro call itself into an index, but that is mostly useless, as the items, declared by the macro, would miss the index.</p>
+We can&#8217;t put the results of macro expansion into the index, because it depends on a macro definition in another file.
+We can put the macro call itself into an index, but that is mostly useless, as the items, declared by the macro, would miss the index.</p>
 </div>
 <div class="paragraph">
 <p>Here&#8217;s another one:</p>
@@ -466,15 +466,15 @@ We can put macro call itself into an index, but that is mostly useless, as the i
 </div>
 <div class="paragraph">
 <p>Modules <code>foo</code> and <code>bar</code> refer to the same file, <code>foo.rs</code>, which effectively means that items from <code>foo.rs</code> are duplicated.
-If <code>foo.rs</code> contains <code>struct S;</code> declaration, than <code>foo::S</code> and <code>bar::S</code> are different types.
+If <code>foo.rs</code> contains the declaration <code>struct S;</code>, then <code>foo::S</code> and <code>bar::S</code> are different types.
 You also can&#8217;t fit that into an index, because those <code>mod</code> declarations are in a different file.</p>
 </div>
 <div class="paragraph">
 <p>The second approach doesn&#8217;t work either.
 In C&#43;&#43;, the compilation unit is a single file.
 In Rust, the compilation unit is a whole crate, which consists of many files and is typically much bigger.
-And Rust has procedural macros, which means that even surface analysis of code can take unbounded amount of time.
-And there are no header files, so IDE has to process the whole crate.
+And Rust has procedural macros, which means that even surface analysis of code can take an unbounded amount of time.
+And there are no header files, so the IDE has to process the whole crate.
 Additionally, intra-crate name resolution is much more complicated (declaration before use vs. fixed point iteration intertwined with macro expansion).</p>
 </div>
 <div class="paragraph">
@@ -487,7 +487,7 @@ We compensate for the deficit of laziness with incrementality.
 Specifically, we use a generic framework for incremental computation&#8201;&#8212;&#8201;<a href="https://github.com/salsa-rs/salsa">salsa</a>.</p>
 </div>
 <div class="paragraph">
-<p>The idea behind salsa is rather simple&#8201;&#8212;&#8201;all function calls inside the compiler are instrumented to record which other functions were called during execution.
+<p>The idea behind salsa is rather simple&#8201;&#8212;&#8201;all function calls inside the compiler are instrumented to record which other functions were called during their execution.
 The recorded traces are used to implement fine-grained incrementality.
 If after modification the results of all of the dependencies are the same, the old result is reused.</p>
 </div>
@@ -496,15 +496,15 @@ If after modification the results of all of the dependencies are the same, the o
 If despite a different input they are the same, the propagation of invalidation stops.</p>
 </div>
 <div class="paragraph">
-<p>Using this engine, we were able to implement rather fancy update strategy.
-Unlike map reduce approach, our indices can store resolved types, which are invalidated only when top-level change occurs.
+<p>Using this engine, we were able to implement a rather fancy update strategy.
+Unlike the map reduce approach, our indices can store resolved types, which are invalidated only when a top-level change occurs.
 Even after a top-level change, we are able to re-use results of most macro expansions.
-And typing inside top-level macro also doesn&#8217;t invalidate caches unless the expansion of the macro introduces a different set of items.</p>
+And typing inside of a top-level macro also doesn&#8217;t invalidate caches unless the expansion of the macro introduces a different set of items.</p>
 </div>
 <div class="paragraph">
 <p>The main benefit of this approach is generality and correctness.
 If you have an incremental computation engine at your disposal, it becomes relatively easy to experiment with the way you structure the computation.
-The code looks mostly like a boring imperative compiler, and you are immune from cache invalidation bugs (we had one, due to procedural macro being non-deterministic).</p>
+The code looks mostly like a boring imperative compiler, and you are immune to cache invalidation bugs (we had one, due to procedural macros being non-deterministic).</p>
 </div>
 <div class="paragraph">
 <p>The main drawback is extra complexity, slower performance (fine-grained tracking of dependencies takes time and memory) and a feeling that this is a somewhat uncharted territory yet :-)</p>
