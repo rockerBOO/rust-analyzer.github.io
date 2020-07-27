@@ -283,10 +283,10 @@ $ cargo xtask install
 <p>To enable server-side logging, run with <code>env RA_LOG=info</code> and see <code>Output &gt; Rust Analyzer Language Server</code> in VS Code&#8217;s panel.</p>
 </li>
 <li>
-<p>To log all LSP requests, add <code>"rust-analyzer.trace.server": "verbose"</code> to the settings and look for <code>Server Trace</code> in the panel.</p>
+<p>To log all LSP requests, add <code>"rust-analyzer.trace.server": "verbose"</code> to the settings and look for <code>Rust Analyzer Language Server Trace</code> in the panel.</p>
 </li>
 <li>
-<p>To enable client-side logging, add <code>"rust-analyzer.trace.extension": true</code> to the settings and open the <code>Console</code> tab of VS Code developer tools.</p>
+<p>To enable client-side logging, add <code>"rust-analyzer.trace.extension": true</code> to the settings and open <code>Output &gt; Rust Analyzer Client</code> in the panel.</p>
 </li>
 </ul>
 </div>
@@ -622,10 +622,30 @@ However, if you use some other build system, you&#8217;ll have to describe the s
 29
 30
 31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
 </pre></td><td class="code"><pre>interface JsonProject {
-   /// The set of paths containing the crates for this project.
-   /// Any `Crate` must be nested inside some `root`.
-   roots: string[];
    /// The set of crates comprising the current project.
    /// Must include all transitive dependencies as well as sysroot crate (libstd, libcore and such).
    crates: Crate[];
@@ -638,11 +658,37 @@ interface Crate {
     edition: "2015" | "2018";
     /// Dependencies
     deps: Dep[];
+    /// Should this crate be treated as a member of current "workspace".
+    ///
+    /// By default, inferred from the `root_module` (members are the crates which reside
+    /// inside the directory opened in the editor).
+    ///
+    /// Set this to `false` for things like standard library and 3rd party crates to
+    /// enable performance optimizations (rust-analyzer assumes that non-member crates
+    /// don't change).
+    is_workspace_member?: boolean;
+    /// Optionally specify the (super)set of `.rs` files comprising this crate.
+    ///
+    /// By default, rust-analyzer assumes that only files under `root_module.parent` can belong to a crate.
+    /// `include_dirs` are included recursively, unless a subdirectory is in `exclude_dirs`.
+    ///
+    /// Different crates can share the same `source`.
+    ///
+    /// If two crates share an `.rs` file in common, they *must* have the same `source`.
+    /// rust-analyzer assumes that files from one source can't refer to files in another source.
+    source?: {
+        include_dirs: string[],
+        exclude_dirs: string[],
+    },
     /// The set of cfgs activated for a given crate, like `["unix", "feature=foo", "feature=bar"]`.
     cfg: string[];
+    /// Target triple for this Crate.
+    ///
+    /// Used when running `rustc --print cfg` to get target-specific cfgs.
+    target?: string;
+    /// Environment variables, used for the `env!` macro
+    env: : { [key: string]: string; },
 
-    /// value of the OUT_DIR env variable.
-    out_dir?: string;
     /// For proc-macro crates, path to compiles proc-macro (.so file).
     proc_macro_dylib_path?: string;
 }
@@ -1301,6 +1347,22 @@ A <code>$&lt;name&gt;</code> placeholder in the search pattern will match any AS
 Within a macro call, a placeholder will match up until whatever token follows the placeholder.</p>
 </div>
 <div class="paragraph">
+<p>All paths in both the search pattern and the replacement template must resolve in the context
+in which this command is invoked. Paths in the search pattern will then match the code if they
+resolve to the same item, even if they&#8217;re written differently. For example if we invoke the
+command in the module <code>foo</code> with a pattern of <code>Bar</code>, then code in the parent module that refers
+to <code>foo::Bar</code> will match.</p>
+</div>
+<div class="paragraph">
+<p>Paths in the replacement template will be rendered appropriately for the context in which the
+replacement occurs. For example if our replacement template is <code>foo::Bar</code> and we match some
+code in the <code>foo</code> module, we&#8217;ll insert just <code>Bar</code>.</p>
+</div>
+<div class="paragraph">
+<p>Method calls should generally be written in UFCS form. e.g. <code>foo::Bar::baz($s, $a)</code> will match
+<code>$s.baz($a)</code>, provided the method call <code>baz</code> resolves to the method <code>foo::Bar::baz</code>.</p>
+</div>
+<div class="paragraph">
 <p>Placeholders may be given constraints by writing them as <code>${&lt;name&gt;:&lt;constraint1&gt;:&lt;constraint2&gt;&#8230;&#8203;}</code>.</p>
 </div>
 <div class="paragraph">
@@ -1878,7 +1940,7 @@ This means something of the form <code>!x</code> or <code>x != y</code>.</p>
 </div>
 <h3 id="extract_variable" class="discrete"><code>extract_variable</code></h3>
 <div class="paragraph">
-<p><strong>Source:</strong> <a href="https://github.com/rust-analyzer/rust-analyzer/blob/master/crates/ra_assists/src/handlers/extract_variable.rs#L14">extract_variable.rs</a></p>
+<p><strong>Source:</strong> <a href="https://github.com/rust-analyzer/rust-analyzer/blob/master/crates/ra_assists/src/handlers/extract_variable.rs#L13">extract_variable.rs</a></p>
 </div>
 <div class="paragraph">
 <p>Extracts subexpression into a variable.</p>
@@ -1960,7 +2022,7 @@ This means something of the form <code>!x</code> or <code>x != y</code>.</p>
 </div>
 <h3 id="fix_visibility" class="discrete"><code>fix_visibility</code></h3>
 <div class="paragraph">
-<p><strong>Source:</strong> <a href="https://github.com/rust-analyzer/rust-analyzer/blob/master/crates/ra_assists/src/handlers/fix_visibility.rs#L9">fix_visibility.rs</a></p>
+<p><strong>Source:</strong> <a href="https://github.com/rust-analyzer/rust-analyzer/blob/master/crates/ra_assists/src/handlers/fix_visibility.rs#L10">fix_visibility.rs</a></p>
 </div>
 <div class="paragraph">
 <p>Makes inaccessible item public.</p>
