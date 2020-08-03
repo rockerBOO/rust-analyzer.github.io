@@ -5,8 +5,8 @@
     <description>rust-analyzer: building a better Rust IDE</description>
     <link>https://rust-analyzer.github.io//</link>
     <atom:link href="https://rust-analyzer.github.io//feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 03 Aug 2020 12:58:45 +0000</pubDate>
-    <lastBuildDate>Mon, 03 Aug 2020 12:58:45 +0000</lastBuildDate>
+    <pubDate>Mon, 03 Aug 2020 13:19:01 +0000</pubDate>
+    <lastBuildDate>Mon, 03 Aug 2020 13:19:01 +0000</lastBuildDate>
     <generator>Jekyll v3.8.7</generator>
     
       <item>
@@ -70,7 +70,7 @@ When invoking &quot;Select Runnable&quot; with the caret on a runnable with a sp
 &lt;div class=&quot;ulist&quot;&gt;
 &lt;ul&gt;
 &lt;li&gt;
-&lt;p&gt;&lt;a href=&quot;https://github.com/rust-analyzer/rust-analyzer/pull/5596&quot;&gt;&lt;code&gt;#5596&lt;/code&gt;&lt;/a&gt; add checkOnSave.noDefaultFeatures and correct, how we handle some cargo flags.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/rust-analyzer/rust-analyzer/pull/5596&quot;&gt;&lt;code&gt;#5596&lt;/code&gt;&lt;/a&gt; add checkOnSave.noDefaultFeatures and correct how we handle some cargo flags.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;a href=&quot;https://github.com/rust-analyzer/rust-analyzer/pull/5565&quot;&gt;&lt;code&gt;#5565&lt;/code&gt;&lt;/a&gt; don&amp;#8217;t mix non-path-based rules with path-based in &lt;strong&gt;S&lt;/strong&gt;tructural &lt;strong&gt;S&lt;/strong&gt;earch &lt;strong&gt;R&lt;/strong&gt;eplace.&lt;/p&gt;
