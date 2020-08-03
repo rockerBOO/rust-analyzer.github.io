@@ -1363,6 +1363,10 @@ code in the <code>foo</code> module, we&#8217;ll insert just <code>Bar</code>.</
 <code>$s.baz($a)</code>, provided the method call <code>baz</code> resolves to the method <code>foo::Bar::baz</code>.</p>
 </div>
 <div class="paragraph">
+<p>The scope of the search / replace will be restricted to the current selection if any, otherwise
+it will apply to the whole workspace.</p>
+</div>
+<div class="paragraph">
 <p>Placeholders may be given constraints by writing them as <code>${&lt;name&gt;:&lt;constraint1&gt;:&lt;constraint2&gt;&#8230;&#8203;}</code>.</p>
 </div>
 <div class="paragraph">
@@ -1845,7 +1849,7 @@ This means something of the form <code>!x</code> or <code>x != y</code>.</p>
 </div>
 <h3 id="change_visibility" class="discrete"><code>change_visibility</code></h3>
 <div class="paragraph">
-<p><strong>Source:</strong> <a href="https://github.com/rust-analyzer/rust-analyzer/blob/master/crates/ra_assists/src/handlers/change_visibility.rs#L13">change_visibility.rs</a></p>
+<p><strong>Source:</strong> <a href="https://github.com/rust-analyzer/rust-analyzer/blob/master/crates/ra_assists/src/handlers/change_visibility.rs#L11">change_visibility.rs</a></p>
 </div>
 <div class="paragraph">
 <p>Adds or changes existing visibility specifier.</p>
@@ -2308,7 +2312,7 @@ This means something of the form <code>!x</code> or <code>x != y</code>.</p>
 </div>
 <h3 id="generate_new" class="discrete"><code>generate_new</code></h3>
 <div class="paragraph">
-<p><strong>Source:</strong> <a href="https://github.com/rust-analyzer/rust-analyzer/blob/master/crates/ra_assists/src/handlers/generate_new.rs#L12">generate_new.rs</a></p>
+<p><strong>Source:</strong> <a href="https://github.com/rust-analyzer/rust-analyzer/blob/master/crates/ra_assists/src/handlers/generate_new.rs#L10">generate_new.rs</a></p>
 </div>
 <div class="paragraph">
 <p>Adds a new inherent impl for a type.</p>
