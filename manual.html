@@ -1915,6 +1915,57 @@ This means something of the form <code>!x</code> or <code>x != y</code>.</p>
 </pre></td></tr></tbody></table></code></pre>
 </div>
 </div>
+<h3 id="expand_glob_import" class="discrete"><code>expand_glob_import</code></h3>
+<div class="paragraph">
+<p><strong>Source:</strong> <a href="https://github.com/rust-analyzer/rust-analyzer/blob/master/crates/ra_assists/src/handlers/expand_glob_import.rs#L15">expand_glob_import.rs</a></p>
+</div>
+<div class="paragraph">
+<p>Expands glob imports.</p>
+</div>
+<div class="listingblock">
+<div class="title">Before</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="rust"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="code"><pre><span class="k">mod</span> <span class="n">foo</span> <span class="p">{</span>
+    <span class="k">pub</span> <span class="k">struct</span> <span class="n">Bar</span><span class="p">;</span>
+    <span class="k">pub</span> <span class="k">struct</span> <span class="n">Baz</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">use</span> <span class="nn">foo</span><span class="p">::</span><span class="o">*</span><span class="err">┃</span><span class="p">;</span>
+
+<span class="k">fn</span> <span class="nf">qux</span><span class="p">(</span><span class="n">bar</span><span class="p">:</span> <span class="n">Bar</span><span class="p">,</span> <span class="n">baz</span><span class="p">:</span> <span class="n">Baz</span><span class="p">)</span> <span class="p">{}</span>
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">After</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="rust"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="code"><pre><span class="k">mod</span> <span class="n">foo</span> <span class="p">{</span>
+    <span class="k">pub</span> <span class="k">struct</span> <span class="n">Bar</span><span class="p">;</span>
+    <span class="k">pub</span> <span class="k">struct</span> <span class="n">Baz</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">use</span> <span class="nn">foo</span><span class="p">::{</span><span class="n">Baz</span><span class="p">,</span> <span class="n">Bar</span><span class="p">};</span>
+
+<span class="k">fn</span> <span class="nf">qux</span><span class="p">(</span><span class="n">bar</span><span class="p">:</span> <span class="n">Bar</span><span class="p">,</span> <span class="n">baz</span><span class="p">:</span> <span class="n">Baz</span><span class="p">)</span> <span class="p">{}</span>
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
 <h3 id="extract_struct_from_enum_variant" class="discrete"><code>extract_struct_from_enum_variant</code></h3>
 <div class="paragraph">
 <p><strong>Source:</strong> <a href="https://github.com/rust-analyzer/rust-analyzer/blob/master/crates/ra_assists/src/handlers/extract_struct_from_enum_variant.rs#L17">extract_struct_from_enum_variant.rs</a></p>
